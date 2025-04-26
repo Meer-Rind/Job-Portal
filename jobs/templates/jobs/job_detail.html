@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ job.title }}{% endblock %}
+
+{% block content %}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <!-- Job Header -->
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">{{ job.title }}</h1>
+                        <div class="flex items-center mt-2">
+                            {% if job.employer.company_logo %}
+                                <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-10 h-10 rounded-full mr-3">
+                            {% else %}
+                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                                    <i class="fas fa-building text-blue-600"></i>
+                                </div>
+                            {% endif %}
+                            <div>
+                                <p class="text-gray-900 font-medium">{{ job.employer.company_name }}</p>
+                                <p class="text-gray-600 text-sm">{{ job.location }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        {% if user.is_authenticated and user.is_employer and job.employer.user == user %}
+                            <a href="{% url 'update_job' job.pk %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2">
+                                <i class="fas fa-edit mr-2"></i> Edit
+                            </a>
+                            <a href="{% url 'delete_job' job.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                <i class="fas fa-trash mr-2"></i> Delete
+                            </a>
+                        {% elif user.is_authenticated and user.is_jobseeker %}
+                            {% if has_applied %}
+                                <span class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600">
+                                    <i class="fas fa-check mr-2"></i> Applied
+                                </span>
+                            {% else %}
+                                <a href="{% url 'apply_job' job.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    <i class="fas fa-paper-plane mr-2"></i> Apply Now
+                                </a>
+                            {% endif %}
+                        {% elif not user.is_authenticated %}
+                            <a href="{% url 'register_jobseeker' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <i class="fas fa-user-plus mr-2"></i> Register to Apply
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Job Details -->
+            <div class="px-6 py-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2">
+                        <h2 class="text-lg font-bold text-gray-900 mb-4">Job Description</h2>
+                        <div class="prose max-w-none">
+                            {{ job.description|linebreaks }}
+                        </div>
+                        
+                        <h2 class="text-lg font-bold text-gray-900 mt-6 mb-4">Requirements</h2>
+                        <div class="prose max-w-none">
+                            {{ job.requirements|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Job Overview</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="text-sm text-gray-500">Posted Date</p>
+                                    <p class="text-gray-900">{{ job.posted_date|date:"F d, Y" }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Deadline</p>
+                                    <p class="text-gray-900">{{ job.deadline|date:"F d, Y" }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Job Type</p>
+                                    <p class="text-gray-900">{{ job.job_type }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Location</p>
+                                    <p class="text-gray-900">{{ job.location }}</p>
+                                </div>
+                                {% if job.category %}
+                                    <div>
+                                        <p class="text-sm text-gray-500">Category</p>
+                                        <p class="text-gray-900">{{ job.category.name }}</p>
+                                    </div>
+                                {% endif %}
+                                {% if job.salary %}
+                                    <div>
+                                        <p class="text-sm text-gray-500">Salary</p>
+                                        <p class="text-gray-900">{{ job.salary }}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        {% if job.employer.company_description %}
+                            <div class="bg-gray-50 rounded-lg p-4 mt-4">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">About {{ job.employer.company_name }}</h3>
+                                <div class="prose max-w-none">
+                                    {{ job.employer.company_description|linebreaks }}
+                                </div>
+                                {% if job.employer.company_website %}
+                                    <a href="{{ job.employer.company_website }}" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+                                        <i class="fas fa-globe mr-2"></i> Visit Website
+                                    </a>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

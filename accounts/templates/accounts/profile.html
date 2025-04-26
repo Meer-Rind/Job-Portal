@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl font-bold text-gray-900">Profile</h1>
+                    {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="w-12 h-12 rounded-full">
+                    {% else %}
+                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                            <i class="fas fa-user text-blue-600 text-xl"></i>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="space-y-6">
+                        <div>
+                            <h2 class="text-lg font-medium text-gray-900 mb-4">Personal Information</h2>
+                            {{ user_form|crispy }}
+                        </div>
+                        
+                        {% if profile_form %}
+                            <div>
+                                <h2 class="text-lg font-medium text-gray-900 mb-4">
+                                    {% if user.is_jobseeker %}Professional Information{% elif user.is_employer %}Company Information{% endif %}
+                                </h2>
+                                {{ profile_form|crispy }}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="flex justify-end">
+                            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <i class="fas fa-save mr-2"></i> Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                {% if user.is_jobseeker and user.resume %}
+                    <div class="mt-8 border-t border-gray-200 pt-6">
+                        <h2 class="text-lg font-medium text-gray-900 mb-4">Your Resume</h2>
+                        <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 text-2xl mr-3"></i>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">{{ user.resume.name|cut:"resumes/" }}</p>
+                                    <p class="text-xs text-gray-500">Uploaded on {{ user.resume.uploaded_at|date:"F d, Y" }}</p>
+                                </div>
+                            </div>
+                            <a href="{{ user.resume.url }}" target="_blank" class="text-blue-600 hover:text-blue-800">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
