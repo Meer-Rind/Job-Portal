@@ -4,33 +4,35 @@
 {% block title %}{{ job.title }}{% endblock %}
 
 {% block content %}
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+        <div class="bg-white shadow-md rounded-lg overflow-hidden hover-scale transition duration-300 card-shadow">
             <!-- Job Header -->
-            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+            <div class="gradient-bg px-6 py-4">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-900">{{ job.title }}</h1>
+                        <h1 class="text-2xl font-bold text-white">{{ job.title }}</h1>
                         <div class="flex items-center mt-2">
                             {% if job.employer.company_logo %}
-                                <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-10 h-10 rounded-full mr-3">
+                                <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-10 h-10 rounded-full mr-3 border-2 border-white">
                             {% else %}
-                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                                    <i class="fas fa-building text-blue-600"></i>
+                                <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center mr-3 border-2 border-white">
+                                    <i class="fas fa-building text-white"></i>
                                 </div>
                             {% endif %}
                             <div>
-                                <p class="text-gray-900 font-medium">{{ job.employer.company_name }}</p>
-                                <p class="text-gray-600 text-sm">{{ job.location }}</p>
+                                <p class="text-white font-medium">{{ job.employer.company_name }}</p>
+                                <p class="text-blue-100 text-sm flex items-center">
+                                    <i class="fas fa-map-marker-alt mr-1"></i> {{ job.location }}
+                                </p>
                             </div>
                         </div>
                     </div>
                     <div class="mt-4 md:mt-0">
                         {% if user.is_authenticated and user.is_employer and job.employer.user == user %}
-                            <a href="{% url 'update_job' job.pk %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2">
+                            <a href="{% url 'update_job' job.pk %}" class="inline-flex items-center px-4 py-2 border border-white shadow-sm text-sm font-medium rounded-md text-white bg-white bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition duration-300 mr-2">
                                 <i class="fas fa-edit mr-2"></i> Edit
                             </a>
-                            <a href="{% url 'delete_job' job.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                            <a href="{% url 'delete_job' job.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-300">
                                 <i class="fas fa-trash mr-2"></i> Delete
                             </a>
                         {% elif user.is_authenticated and user.is_jobseeker %}
@@ -39,12 +41,12 @@
                                     <i class="fas fa-check mr-2"></i> Applied
                                 </span>
                             {% else %}
-                                <a href="{% url 'apply_job' job.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <a href="{% url 'apply_job' job.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white gradient-bg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-300">
                                     <i class="fas fa-paper-plane mr-2"></i> Apply Now
                                 </a>
                             {% endif %}
                         {% elif not user.is_authenticated %}
-                            <a href="{% url 'register_jobseeker' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <a href="{% url 'register_jobseeker' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white gradient-bg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-300">
                                 <i class="fas fa-user-plus mr-2"></i> Register to Apply
                             </a>
                         {% endif %}
@@ -54,62 +56,86 @@
             
             <!-- Job Details -->
             <div class="px-6 py-4">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="md:col-span-2">
-                        <h2 class="text-lg font-bold text-gray-900 mb-4">Job Description</h2>
-                        <div class="prose max-w-none">
+                        <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                            <i class="fas fa-align-left mr-2 text-primary-600"></i>
+                            Job Description
+                        </h2>
+                        <div class="prose max-w-none bg-gray-50 p-4 rounded-lg border border-gray-200">
                             {{ job.description|linebreaks }}
                         </div>
                         
-                        <h2 class="text-lg font-bold text-gray-900 mt-6 mb-4">Requirements</h2>
-                        <div class="prose max-w-none">
+                        <h2 class="text-lg font-bold text-gray-900 mt-8 mb-4 flex items-center">
+                            <i class="fas fa-clipboard-check mr-2 text-primary-600"></i>
+                            Requirements
+                        </h2>
+                        <div class="prose max-w-none bg-gray-50 p-4 rounded-lg border border-gray-200">
                             {{ job.requirements|linebreaks }}
                         </div>
                     </div>
                     
-                    <div>
-                        <div class="bg-gray-50 rounded-lg p-4">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Job Overview</h3>
+                    <div class="space-y-6">
+                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                <i class="fas fa-info-circle mr-2 text-primary-600"></i>
+                                Job Overview
+                            </h3>
                             <div class="space-y-4">
                                 <div>
-                                    <p class="text-sm text-gray-500">Posted Date</p>
-                                    <p class="text-gray-900">{{ job.posted_date|date:"F d, Y" }}</p>
+                                    <p class="text-sm text-gray-500 flex items-center">
+                                        <i class="fas fa-calendar-day mr-2"></i> Posted Date
+                                    </p>
+                                    <p class="text-gray-900 mt-1 ml-6">{{ job.posted_date|date:"F d, Y" }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500">Deadline</p>
-                                    <p class="text-gray-900">{{ job.deadline|date:"F d, Y" }}</p>
+                                    <p class="text-sm text-gray-500 flex items-center">
+                                        <i class="fas fa-clock mr-2"></i> Deadline
+                                    </p>
+                                    <p class="text-gray-900 mt-1 ml-6">{{ job.deadline|date:"F d, Y" }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500">Job Type</p>
-                                    <p class="text-gray-900">{{ job.job_type }}</p>
+                                    <p class="text-sm text-gray-500 flex items-center">
+                                        <i class="fas fa-briefcase mr-2"></i> Job Type
+                                    </p>
+                                    <p class="text-gray-900 mt-1 ml-6">{{ job.job_type }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500">Location</p>
-                                    <p class="text-gray-900">{{ job.location }}</p>
+                                    <p class="text-sm text-gray-500 flex items-center">
+                                        <i class="fas fa-map-marker-alt mr-2"></i> Location
+                                    </p>
+                                    <p class="text-gray-900 mt-1 ml-6">{{ job.location }}</p>
                                 </div>
                                 {% if job.category %}
                                     <div>
-                                        <p class="text-sm text-gray-500">Category</p>
-                                        <p class="text-gray-900">{{ job.category.name }}</p>
+                                        <p class="text-sm text-gray-500 flex items-center">
+                                            <i class="fas fa-tag mr-2"></i> Category
+                                        </p>
+                                        <p class="text-gray-900 mt-1 ml-6">{{ job.category.name }}</p>
                                     </div>
                                 {% endif %}
                                 {% if job.salary %}
                                     <div>
-                                        <p class="text-sm text-gray-500">Salary</p>
-                                        <p class="text-gray-900">{{ job.salary }}</p>
+                                        <p class="text-sm text-gray-500 flex items-center">
+                                            <i class="fas fa-dollar-sign mr-2"></i> Salary
+                                        </p>
+                                        <p class="text-gray-900 mt-1 ml-6">{{ job.salary }}</p>
                                     </div>
                                 {% endif %}
                             </div>
                         </div>
                         
                         {% if job.employer.company_description %}
-                            <div class="bg-gray-50 rounded-lg p-4 mt-4">
-                                <h3 class="text-lg font-medium text-gray-900 mb-4">About {{ job.employer.company_name }}</h3>
+                            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                    <i class="fas fa-building mr-2 text-primary-600"></i>
+                                    About {{ job.employer.company_name }}
+                                </h3>
                                 <div class="prose max-w-none">
                                     {{ job.employer.company_description|linebreaks }}
                                 </div>
                                 {% if job.employer.company_website %}
-                                    <a href="{{ job.employer.company_website }}" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+                                    <a href="{{ job.employer.company_website }}" target="_blank" class="inline-flex items-center text-primary-600 hover:text-primary-800 mt-3 transition duration-300">
                                         <i class="fas fa-globe mr-2"></i> Visit Website
                                     </a>
                                 {% endif %}

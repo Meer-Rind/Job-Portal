@@ -4,16 +4,19 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+        <div class="bg-white shadow-md rounded-lg overflow-hidden hover-scale transition duration-300 card-shadow">
+            <div class="bg-gradient-to-r from-primary-500 to-primary-700 px-6 py-4">
                 <div class="flex items-center justify-between">
-                    <h1 class="text-2xl font-bold text-gray-900">Profile</h1>
+                    <h1 class="text-2xl font-bold text-white flex items-center">
+                        <i class="fas fa-user-circle mr-2"></i>
+                        Profile
+                    </h1>
                     {% if user.profile_picture %}
-                        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="w-12 h-12 rounded-full">
+                        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="w-12 h-12 rounded-full border-2 border-white shadow-sm">
                     {% else %}
-                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                            <i class="fas fa-user text-blue-600 text-xl"></i>
+                        <div class="w-12 h-12 rounded-full bg-white bg-opacity-20 flex items-center justify-center border-2 border-white">
+                            <i class="fas fa-user text-white text-xl"></i>
                         </div>
                     {% endif %}
                 </div>
@@ -22,15 +25,19 @@
             <div class="p-6">
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="space-y-6">
+                    <div class="space-y-8">
                         <div>
-                            <h2 class="text-lg font-medium text-gray-900 mb-4">Personal Information</h2>
+                            <h2 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                <i class="fas fa-user-edit mr-2 text-primary-600"></i>
+                                Personal Information
+                            </h2>
                             {{ user_form|crispy }}
                         </div>
                         
                         {% if profile_form %}
                             <div>
-                                <h2 class="text-lg font-medium text-gray-900 mb-4">
+                                <h2 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                    <i class="fas {% if user.is_jobseeker %}fa-briefcase{% else %}fa-building{% endif %} mr-2 text-primary-600"></i>
                                     {% if user.is_jobseeker %}Professional Information{% elif user.is_employer %}Company Information{% endif %}
                                 </h2>
                                 {{ profile_form|crispy }}
@@ -38,7 +45,7 @@
                         {% endif %}
                         
                         <div class="flex justify-end">
-                            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white gradient-bg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-300">
                                 <i class="fas fa-save mr-2"></i> Save Changes
                             </button>
                         </div>
@@ -47,8 +54,11 @@
                 
                 {% if user.is_jobseeker and user.resume %}
                     <div class="mt-8 border-t border-gray-200 pt-6">
-                        <h2 class="text-lg font-medium text-gray-900 mb-4">Your Resume</h2>
-                        <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+                        <h2 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                            <i class="fas fa-file-alt mr-2 text-primary-600"></i>
+                            Your Resume
+                        </h2>
+                        <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition duration-300">
                             <div class="flex items-center">
                                 <i class="fas fa-file-pdf text-red-500 text-2xl mr-3"></i>
                                 <div>
@@ -56,7 +66,7 @@
                                     <p class="text-xs text-gray-500">Uploaded on {{ user.resume.uploaded_at|date:"F d, Y" }}</p>
                                 </div>
                             </div>
-                            <a href="{{ user.resume.url }}" target="_blank" class="text-blue-600 hover:text-blue-800">
+                            <a href="{{ user.resume.url }}" target="_blank" class="text-primary-600 hover:text-primary-800 transition duration-300" title="Download Resume">
                                 <i class="fas fa-download"></i>
                             </a>
                         </div>

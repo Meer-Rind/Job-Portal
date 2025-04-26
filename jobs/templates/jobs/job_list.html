@@ -4,11 +4,14 @@
 {% block title %}Job Listings{% endblock %}
 
 {% block content %}
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-8">Job Listings</h1>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
+            <i class="fas fa-search mr-3 text-primary-600"></i>
+            Job Listings
+        </h1>
         
         <!-- Search Form -->
-        <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <div class="bg-white shadow-md rounded-lg p-6 mb-8 card-shadow animate-slide-up">
             <form method="get" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {{ form.title|as_crispy_field }}
@@ -17,7 +20,7 @@
                     {{ form.category|as_crispy_field }}
                 </div>
                 <div class="flex justify-end">
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">
+                    <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white gradient-bg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-300">
                         <i class="fas fa-search mr-2"></i> Search Jobs
                     </button>
                 </div>
@@ -25,36 +28,45 @@
         </div>
         
         <!-- Job Listings -->
-        <div class="space-y-6">
+        <div class="space-y-6 animate-slide-up" style="animation-delay: 0.1s;">
             {% if jobs %}
                 {% for job in jobs %}
-                    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <div class="bg-white shadow-md rounded-lg overflow-hidden hover-scale transition duration-300 card-shadow">
                         <div class="p-6">
                             <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                                 <div class="flex items-start space-x-4">
                                     {% if job.employer.company_logo %}
-                                        <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-16 h-16 object-contain">
+                                        <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-16 h-16 object-contain rounded-full border-2 border-white shadow-sm">
                                     {% else %}
-                                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                                            <i class="fas fa-building text-blue-600 text-2xl"></i>
+                                        <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center border-2 border-white">
+                                            <i class="fas fa-building text-primary-600 text-2xl"></i>
                                         </div>
                                     {% endif %}
                                     <div>
                                         <h2 class="text-xl font-bold text-gray-900">{{ job.title }}</h2>
-                                        <p class="text-gray-600">{{ job.employer.company_name }} • {{ job.location }}</p>
+                                        <p class="text-gray-600 flex items-center">
+                                            <i class="fas fa-building mr-1"></i> {{ job.employer.company_name }} • 
+                                            <i class="fas fa-map-marker-alt ml-2 mr-1"></i> {{ job.location }}
+                                        </p>
                                         <div class="flex flex-wrap gap-2 mt-2">
-                                            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">{{ job.job_type }}</span>
+                                            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded flex items-center">
+                                                <i class="fas fa-briefcase mr-1"></i> {{ job.job_type }}
+                                            </span>
                                             {% if job.category %}
-                                                <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded">{{ job.category.name }}</span>
+                                                <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded flex items-center">
+                                                    <i class="fas fa-tag mr-1"></i> {{ job.category.name }}
+                                                </span>
                                             {% endif %}
                                             {% if job.salary %}
-                                                <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded">{{ job.salary }}</span>
+                                                <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded flex items-center">
+                                                    <i class="fas fa-dollar-sign mr-1"></i> {{ job.salary }}
+                                                </span>
                                             {% endif %}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mt-4 md:mt-0">
-                                    <a href="{% url 'job_detail' job.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    <a href="{% url 'job_detail' job.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white gradient-bg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-300">
                                         View Details
                                     </a>
                                 </div>
@@ -62,35 +74,47 @@
                         </div>
                         <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
                             <div class="flex justify-between items-center">
-                                <p class="text-sm text-gray-500">Posted {{ job.posted_date|timesince }} ago • Deadline: {{ job.deadline }}</p>
+                                <p class="text-sm text-gray-500 flex items-center">
+                                    <i class="fas fa-clock mr-1"></i> Posted {{ job.posted_date|timesince }} ago • 
+                                    <i class="fas fa-calendar-times ml-2 mr-1"></i> Deadline: {{ job.deadline|date:"M d, Y" }}
+                                </p>
                                 {% if user.is_authenticated and user.is_jobseeker %}
                                     {% if not has_applied %}
-                                        <a href="{% url 'apply_job' job.pk %}" class="text-sm font-medium text-blue-600 hover:text-blue-500">Apply Now</a>
+                                        <a href="{% url 'apply_job' job.pk %}" class="text-sm font-medium text-primary-600 hover:text-primary-800 transition duration-300 flex items-center">
+                                            <i class="fas fa-paper-plane mr-1"></i> Apply Now
+                                        </a>
                                     {% else %}
-                                        <span class="text-sm font-medium text-green-600">Already Applied</span>
+                                        <span class="text-sm font-medium text-green-600 flex items-center">
+                                            <i class="fas fa-check mr-1"></i> Applied
+                                        </span>
                                     {% endif %}
                                 {% elif not user.is_authenticated %}
-                                    <a href="{% url 'register_jobseeker' %}" class="text-sm font-medium text-blue-600 hover:text-blue-500">Register to Apply</a>
+                                    <a href="{% url 'register_jobseeker' %}" class="text-sm font-medium text-primary-600 hover:text-primary-800 transition duration-300 flex items-center">
+                                        <i class="fas fa-user-plus mr-1"></i> Register to Apply
+                                    </a>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
                 {% endfor %}
             {% else %}
-                <div class="bg-white shadow-md rounded-lg p-8 text-center">
+                <div class="bg-white shadow-md rounded-lg p-8 text-center card-shadow">
                     <i class="fas fa-search text-5xl text-gray-400 mb-4"></i>
                     <h3 class="text-xl font-medium text-gray-900 mb-2">No jobs found</h3>
-                    <p class="text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
+                    <p class="text-gray-500 mb-4">Try adjusting your search or filter to find what you're looking for.</p>
+                    <a href="{% url 'job_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white gradient-bg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-300">
+                        <i class="fas fa-redo mr-2"></i> Reset Filters
+                    </a>
                 </div>
             {% endif %}
         </div>
         
         <!-- Pagination -->
         {% if is_paginated %}
-            <div class="mt-8 flex justify-center">
+            <div class="mt-8 flex justify-center animate-fade-in">
                 <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
                     {% if page_obj.has_previous %}
-                        <a href="?page={{ page_obj.previous_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        <a href="?page={{ page_obj.previous_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition duration-300">
                             <span class="sr-only">Previous</span>
                             <i class="fas fa-chevron-left"></i>
                         </a>
@@ -98,18 +122,18 @@
                     
                     {% for num in page_obj.paginator.page_range %}
                         {% if page_obj.number == num %}
-                            <a href="?page={{ num }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-blue-600 text-white text-sm font-medium">
+                            <a href="?page={{ num }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-primary-600 text-white text-sm font-medium">
                                 {{ num }}
                             </a>
                         {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                            <a href="?page={{ num }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            <a href="?page={{ num }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-300">
                                 {{ num }}
                             </a>
                         {% endif %}
                     {% endfor %}
                     
                     {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        <a href="?page={{ page_obj.next_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition duration-300">
                             <span class="sr-only">Next</span>
                             <i class="fas fa-chevron-right"></i>
                         </a>

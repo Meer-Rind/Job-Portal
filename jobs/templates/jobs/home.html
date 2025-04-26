@@ -5,26 +5,29 @@
 
 {% block content %}
     <!-- Hero Section -->
-    <section class="bg-blue-700 text-white py-16">
-        <div class="container mx-auto px-4 text-center">
+    <section class="gradient-bg text-white py-20">
+        <div class="container mx-auto px-4 text-center animate-fade-in">
             <h1 class="text-4xl md:text-5xl font-bold mb-6">Find Your Dream Job Today</h1>
             <p class="text-xl mb-8 max-w-2xl mx-auto">Browse thousands of job listings and find the perfect match for your skills and experience.</p>
-            <a href="{% url 'job_list' %}" class="bg-white text-blue-700 font-bold py-3 px-8 rounded-lg hover:bg-blue-100 transition duration-300 inline-block">Browse Jobs</a>
+            <a href="{% url 'job_list' %}" class="inline-flex items-center px-8 py-3 border border-transparent text-lg font-medium rounded-md shadow-sm text-blue-700 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition duration-300 hover-scale">
+                <i class="fas fa-search mr-2"></i> Browse Jobs
+            </a>
         </div>
     </section>
 
     <!-- Job Categories -->
-    <section class="py-12">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-8 text-center">Popular Categories</h2>
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4 animate-fade-in" style="animation-delay: 0.1s;">
+            <h2 class="text-3xl font-bold mb-12 text-center">Popular Categories</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {% for category in categories %}
-                    <a href="{% url 'job_list' %}?category={{ category.id }}" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 text-center">
-                        <div class="text-blue-600 text-4xl mb-4">
-                            <i class="fas fa-briefcase"></i>
+                    <a href="{% url 'job_list' %}?category={{ category.id }}" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 text-center hover-scale">
+                        <div class="text-primary-600 text-4xl mb-4">
+                            <i class="fas fa-{{ category.icon|default:'briefcase' }}"></i>
                         </div>
                         <h3 class="text-xl font-semibold mb-2">{{ category.name }}</h3>
                         <p class="text-gray-600">{{ category.description|truncatewords:10 }}</p>
+                        <span class="inline-block mt-3 text-primary-600 font-medium">View Jobs <i class="fas fa-arrow-right ml-1"></i></span>
                     </a>
                 {% endfor %}
             </div>
@@ -32,18 +35,18 @@
     </section>
 
     <!-- Featured Jobs -->
-    <section class="py-12 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-8 text-center">Featured Jobs</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4 animate-fade-in" style="animation-delay: 0.2s;">
+            <h2 class="text-3xl font-bold mb-12 text-center">Featured Jobs</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {% for job in jobs %}
-                    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 hover-scale border border-gray-100">
                         <div class="flex items-center mb-4">
                             {% if job.employer.company_logo %}
-                                <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-12 h-12 rounded-full object-cover mr-4">
+                                <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-12 h-12 rounded-full object-cover mr-4 border-2 border-white shadow-sm">
                             {% else %}
-                                <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-4">
-                                    <i class="fas fa-building text-2xl"></i>
+                                <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-4 border-2 border-white">
+                                    <i class="fas fa-building text-xl"></i>
                                 </div>
                             {% endif %}
                             <div>
@@ -60,30 +63,38 @@
                         </div>
                         <p class="text-gray-600 mb-4">{{ job.description|truncatewords:20 }}</p>
                         {% if job.salary %}
-                            <p class="font-semibold text-gray-800 mb-4">Salary: {{ job.salary }}</p>
+                            <p class="font-semibold text-gray-800 mb-4"><i class="fas fa-dollar-sign mr-1 text-primary-600"></i> {{ job.salary }}</p>
                         {% endif %}
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-500">Posted {{ job.posted_date|timesince }} ago</span>
-                            <a href="{% url 'job_detail' job.pk %}" class="text-blue-600 hover:text-blue-800 font-medium">View Details</a>
+                            <span class="text-sm text-gray-500"><i class="fas fa-clock mr-1"></i> Posted {{ job.posted_date|timesince }} ago</span>
+                            <a href="{% url 'job_detail' job.pk %}" class="text-primary-600 hover:text-primary-800 font-medium transition duration-300">
+                                View Details <i class="fas fa-chevron-right ml-1"></i>
+                            </a>
                         </div>
                     </div>
                 {% endfor %}
             </div>
-            <div class="text-center mt-8">
-                <a href="{% url 'job_list' %}" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition duration-300 inline-block">View All Jobs</a>
+            <div class="text-center mt-12">
+                <a href="{% url 'job_list' %}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white gradient-bg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-300 hover-scale">
+                    <i class="fas fa-list mr-2"></i> View All Jobs
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Call to Action -->
-    <section class="py-16 bg-blue-600 text-white">
-        <div class="container mx-auto px-4 text-center">
+    <section class="gradient-bg text-white py-20">
+        <div class="container mx-auto px-4 text-center animate-fade-in" style="animation-delay: 0.3s;">
             <h2 class="text-3xl font-bold mb-6">Are You Hiring?</h2>
             <p class="text-xl mb-8 max-w-2xl mx-auto">Post your job openings and find the best candidates for your company.</p>
             {% if user.is_authenticated and user.is_employer %}
-                <a href="{% url 'post_job' %}" class="bg-white text-blue-700 font-bold py-3 px-8 rounded-lg hover:bg-blue-100 transition duration-300 inline-block">Post a Job</a>
+                <a href="{% url 'post_job' %}" class="inline-flex items-center px-8 py-3 border border-transparent text-lg font-medium rounded-md shadow-sm text-blue-700 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition duration-300 hover-scale">
+                    <i class="fas fa-plus-circle mr-2"></i> Post a Job
+                </a>
             {% else %}
-                <a href="{% url 'register_employer' %}" class="bg-white text-blue-700 font-bold py-3 px-8 rounded-lg hover:bg-blue-100 transition duration-300 inline-block">Register as Employer</a>
+                <a href="{% url 'register_employer' %}" class="inline-flex items-center px-8 py-3 border border-transparent text-lg font-medium rounded-md shadow-sm text-blue-700 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition duration-300 hover-scale">
+                    <i class="fas fa-user-tie mr-2"></i> Register as Employer
+                </a>
             {% endif %}
         </div>
     </section>

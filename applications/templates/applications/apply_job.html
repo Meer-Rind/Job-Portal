@@ -4,39 +4,44 @@
 {% block title %}Apply for {{ job.title }}{% endblock %}
 
 {% block content %}
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
-                <h1 class="text-2xl font-bold text-gray-900">Apply for: {{ job.title }}</h1>
-                <p class="text-gray-600">{{ job.employer.company_name }} • {{ job.location }}</p>
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+        <div class="bg-white shadow-md rounded-lg overflow-hidden hover-scale transition duration-300 card-shadow">
+            <div class="gradient-bg px-6 py-4">
+                <h1 class="text-2xl font-bold text-white flex items-center">
+                    <i class="fas fa-file-signature mr-2"></i>
+                    Apply for: {{ job.title }}
+                </h1>
+                <p class="text-blue-100 mt-1 flex items-center">
+                    <i class="fas fa-building mr-1"></i> {{ job.employer.company_name }} • 
+                    <i class="fas fa-map-marker-alt ml-2 mr-1"></i> {{ job.location }}
+                </p>
             </div>
             
             <div class="p-6">
-                <div class="mb-6">
-                    <h2 class="text-lg font-medium text-gray-900 mb-2">Application Details</h2>
-                    <div class="bg-blue-50 p-4 rounded-lg">
+                <div class="mb-6 animate-slide-up" style="animation-delay: 0.1s;">
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
                         <div class="flex">
                             <div class="flex-shrink-0">
-                                <i class="fas fa-info-circle text-blue-400"></i>
+                                <i class="fas fa-info-circle text-blue-500 text-xl"></i>
                             </div>
                             <div class="ml-3">
-                                <p class="text-sm text-blue-700">
-                                    Your profile information will be included with this application. 
-                                    Please ensure your profile is up to date before applying.
-                                </p>
+                                <h3 class="text-sm font-medium text-blue-800">Application Information</h3>
+                                <div class="mt-1 text-sm text-blue-700">
+                                    <p>Your profile information will be included with this application. Please ensure your profile is up to date before applying.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <form method="post" enctype="multipart/form-data">
+                <form method="post" enctype="multipart/form-data" class="animate-slide-up" style="animation-delay: 0.2s;">
                     {% csrf_token %}
                     {{ form|crispy }}
                     <div class="mt-6 flex justify-end space-x-3">
-                        <a href="{% url 'job_detail' job.pk %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <a href="{% url 'job_detail' job.pk %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-300">
                             <i class="fas fa-times mr-2"></i> Cancel
                         </a>
-                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white gradient-bg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-300">
                             <i class="fas fa-paper-plane mr-2"></i> Submit Application
                         </button>
                     </div>
